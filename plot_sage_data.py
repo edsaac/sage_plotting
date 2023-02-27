@@ -4,6 +4,27 @@ import sage_data_client
 import streamlit as st
 from datetime import datetime, date
 
+st.markdown(
+    """
+    <style>
+        [data-testid=stSidebar] [data-testid=stImage]{
+            text-align: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+            transition: all 0.8s;
+            opacity: 0.7;
+        }
+
+        [data-testid=stSidebar] [data-testid=stImage]:hover {
+            opacity: 1.0;
+            transform: rotate(180deg);
+        }
+    </style>
+    """, unsafe_allow_html=True
+)
+
 @st.cache_data()
 def get_data(parameter:str, start_datetime:str, end_datetime:str):
 
@@ -23,6 +44,7 @@ def get_data(parameter:str, start_datetime:str, end_datetime:str):
 container = st.container()
 
 with st.sidebar:
+    st.image("https://portal.sagecontinuum.org/wsn-closed.dfca4c4b.png")
     with st.form("Form"):
         
         "## Parameter:"
