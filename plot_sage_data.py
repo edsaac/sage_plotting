@@ -40,6 +40,15 @@ def get_data(parameter:str, start_datetime:str, end_datetime:str):
     
     return df
 
+def to_isodate(d:date, t:datetime) -> str:
+    """ 
+    Takes a date and a time and returns it formatted in
+    its ISO form for query submission
+    """
+    return datetime(
+        d.year, d.month, d.day,
+        t.hour, t.minute, t.second) 
+
 "# 📈 Plot data from a SAGE node"
 container = st.container()
 
@@ -47,39 +56,27 @@ with st.sidebar:
     st.image("https://portal.sagecontinuum.org/wsn-closed.dfca4c4b.png")
     with st.form("Form"):
         
-        "## Parameter:"
+        "## ⚙️ Parameter:"
         parameter = st.selectbox(
             "Select one", 
             ["temperature", "relative_humidity", "pressure"],
             format_func=lambda x:x.title().replace("_"," "))
 
-        "## From:"
+        "## 🗓️ Time range:"
+        
+        date_range = st.date_input(
+            "Dates range",
+            [date(2023, 2, 8), date(2023, 2, 11)],
+            label_visibility="collapsed")
+        
+        start_date, end_date = date_range
+        
         cols = st.columns(2)
-        with cols[0]: 
-            start_date = st.date_input(
-                "Start date",
-                date(2023, 2, 8))
-        
-        with cols[1]: 
-            start_time = st.time_input("Start time")
-        
-        iso_start_time = datetime(
-            start_date.year, start_date.month, start_date.day,
-            start_time.hour, start_time.minute, start_time.second)
+        with cols[0]: start_time = st.time_input("Start time")
+        with cols[1]: end_time = st.time_input("End time")
 
-        "## To:"
-        cols = st.columns(2)
-        with cols[0]: 
-            end_date = st.date_input(
-                "End date", 
-                date(2023, 2, 10))
-        
-        with cols[1]: 
-            end_time = st.time_input("End time")
-        
-        iso_end_time = datetime(
-            end_date.year, end_date.month, end_date.day,
-            end_time.hour, end_time.minute, end_time.second)
+        iso_start_time = to_isodate(start_date, start_time)
+        iso_end_time = to_isodate(end_date, end_time)
         
         # Retrieve data
         submit_button = st.form_submit_button(
