@@ -26,7 +26,10 @@ st.markdown(
 )
 
 @st.cache_data()
-def get_data(parameter:str, start_datetime:str, end_datetime:str):
+def get_data(
+    parameter:str,
+    node_id:str,
+    start_datetime:str, end_datetime:str):
 
     df = sage_data_client.query(
         start=start_datetime,
@@ -34,7 +37,7 @@ def get_data(parameter:str, start_datetime:str, end_datetime:str):
         filter={
             "name": f"env.{parameter}",
             "sensor": "bme680",
-            "vsn":"W083",
+            "vsn":f"{node_id}",
         }
     )
     
@@ -58,9 +61,13 @@ with st.sidebar:
         
         "## ⚙️ Parameter:"
         parameter = st.selectbox(
-            "Select one", 
+            "Parameter", 
             ["temperature", "relative_humidity", "pressure"],
-            format_func=lambda x:x.title().replace("_"," "))
+            format_func=lambda x:x.title().replace("_"," "),
+            label_visibility="collapsed")
+        
+        "## 📍 Node:"
+        node_id = st.selectbox("Node", ["W083", "W024"], label_visibility="collapsed")
 
         "## 🗓️ Time range:"
         
@@ -86,7 +93,12 @@ with st.sidebar:
             
 with container:
     if submit_button:
-        df = get_data(parameter, iso_start_time.isoformat(), iso_end_time.isoformat())
+        df = get_data(
+            parameter,
+            node_id,
+            iso_start_time.isoformat(), 
+            iso_end_time.isoformat())
+        
         st.session_state.df = df
 
         ## Calculations
