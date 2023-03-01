@@ -2,7 +2,6 @@
 gatherUsageStats = true
 
 [theme]
-base="light"
 primaryColor="#018749"
 backgroundColor="#FFFFFF"
 secondaryBackgroundColor="rgba(245, 40, 145, 0.10)"

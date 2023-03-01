@@ -1,56 +1,15 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 import sage_data_client
 import streamlit as st
-from datetime import datetime, date
+from datetime import datetime, date, time
+from appmisc import *
 
-st.markdown(
-    """
-    <style>
-        [data-testid=stSidebar] [data-testid=stImage]{
-            text-align: center;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 30%;
-            transition: all 0.8s;
-            opacity: 0.7;
-        }
-
-        [data-testid=stSidebar] [data-testid=stImage]:hover {
-            opacity: 1.0;
-            transform: rotate(180deg);
-        }
-    </style>
-    """, unsafe_allow_html=True
-)
-
-@st.cache_data()
-def get_data(
-    parameter:str,
-    node_id:str,
-    start_datetime:str, end_datetime:str):
-
-    df = sage_data_client.query(
-        start=start_datetime,
-        end=end_datetime,
-        filter={
-            "name": f"env.{parameter}",
-            "sensor": "bme680",
-            "vsn":f"{node_id}",
-        }
-    )
-    
-    return df
-
-def to_isodate(d:date, t:datetime) -> str:
-    """ 
-    Takes a date and a time and returns it formatted in
-    its ISO form for query submission
-    """
-    return datetime(
-        d.year, d.month, d.day,
-        t.hour, t.minute, t.second) 
+with open("./assets/style.css") as f:
+    st.markdown(f"""
+        <style>{f.read()}</style>
+        """, unsafe_allow_html=True)
 
 "# 📈 Plot data from a SAGE node"
 container = st.container()
@@ -73,14 +32,14 @@ with st.sidebar:
         
         date_range = st.date_input(
             "Dates range",
-            [date(2023, 2, 8), date(2023, 2, 11)],
+            [date(2023, 2, 8), date(2023, 3, 1)],
             label_visibility="collapsed")
         
         start_date, end_date = date_range
         
         cols = st.columns(2)
-        with cols[0]: start_time = st.time_input("Start time")
-        with cols[1]: end_time = st.time_input("End time")
+        with cols[0]: start_time = st.time_input("Start time", time(0,0,0))
+        with cols[1]: end_time = st.time_input("End time", time(0,0,0))
 
         iso_start_time = to_isodate(start_date, start_time)
         iso_end_time = to_isodate(end_date, end_time)
@@ -101,30 +60,13 @@ with container:
         
         st.session_state.df = df
 
-        ## Calculations
-        df = st.session_state.df
-        mean_value = df["value"].mean()
-        rolling_avg = df["value"].rolling(500, center=True).mean()
+        st.plotly_chart(
+            create_plotly_figure(df, node_id=node_id, parameter=parameter),
+            use_container_width=True
+        )
 
-        # Plot parameter
-        fig, ax = plt.subplots(figsize=[5,5])
-
-        ## Plots
-        df.set_index("timestamp").value.plot(ax=ax, lw=1)
-        ax.axhline(y=mean_value, ls="dashed", lw=2, c="black")
-        ax.plot(df["timestamp"], rolling_avg)
-
-        ## Styling
-        ax.set_ylabel(f"{parameter.title().replace('_', ' ')}")
-        ax.spines[["top","right"]].set_visible(False)
-        ax.legend([
-                "Raw data", 
-                f"Mean value = {mean_value:.1f}",
-                "Rolling avg"],
-            loc="center left",
-            bbox_to_anchor=[1.02, 0.5],
-            title=parameter.title().replace("_", " "))
-        ax.set_xlabel("Date")
-        st.pyplot(fig)
+        with st.expander("Get matplotlib plot"):
+            st.pyplot(create_matplotlib_figure(df, node_id=node_id, parameter=parameter))
+    
     else:
         st.info(" 👈 Select options from the sidebar")
