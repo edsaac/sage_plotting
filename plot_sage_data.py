@@ -32,7 +32,7 @@ with st.sidebar:
         
         date_range = st.date_input(
             "Dates range",
-            [date(2023, 2, 8), date(2023, 3, 1)],
+            [date(2023, 2, 20), date(2023, 3, 1)],
             label_visibility="collapsed")
         
         start_date, end_date = date_range
