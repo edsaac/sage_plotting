@@ -70,7 +70,7 @@ def create_plotly_figure(df:pd.DataFrame, **kwargs) -> go.Figure:
         showgrid=True)
     
     fig.update_yaxes(
-        title_text=parameter.title(), 
+        title_text=parameter.title().replace("_", " "), 
         showgrid=False)
     return fig
 
