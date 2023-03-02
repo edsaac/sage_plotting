@@ -152,6 +152,7 @@ def create_rain_figure(df:pd.DataFrame, **kwargs) -> go.Figure:
         height=600,
         title_text=f"Node {node_id}",
         legend=dict(
+            font_size=18,
             orientation="h",
             yanchor="bottom", y=0.99,
             xanchor="center", x=0.50
