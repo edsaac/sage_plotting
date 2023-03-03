@@ -32,7 +32,7 @@ def get_data(
             "vsn": node_id,
         }
     )
-    
+
     print(f"env.{parameter}")
     return df
 
@@ -113,7 +113,7 @@ def create_rain_figure(df:pd.DataFrame, **kwargs) -> go.Figure:
                 mode="none",
                 name="Raw data",
                 fill="tozeroy",
-                marker=dict(color="rgba(31,120,180)", line_width=0),
+                marker=dict(color="#4193BF", line_width=0),
                 hovertemplate=hovertemplate
             ),
             secondary_y=False
@@ -124,14 +124,14 @@ def create_rain_figure(df:pd.DataFrame, **kwargs) -> go.Figure:
             go.Scatter(
                 x=df["timestamp"], y=rolling_sum,
                 name=f"Rolling sum (1h)",
-                line=dict(color="rgb(31,120,180)", width=2),
+                line=dict(color="#5B41BF", width=2),
                 hovertemplate=hovertemplate
             ),
             secondary_y=True
         )
 
         fig.update_yaxes(
-            title_text="Rolling sum", 
+            title_text="Rolling sum (1h)", 
             showgrid=False, secondary_y=True, rangemode='tozero')
 
 
