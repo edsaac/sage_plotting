@@ -5,6 +5,47 @@ from plotly.subplots import make_subplots
 import sage_data_client
 import streamlit as st
 from datetime import datetime, date, time
+import shutil, os
+import requests
+from requests.auth import HTTPBasicAuth
+from multiprocessing import Pool
+from time import sleep
+
+def check_password():
+    """Returns `True` if the user had the correct password."""
+
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if st.session_state.password == st.secrets.cover.secret:
+            st.session_state.password_correct = True
+            del st.session_state.password
+        else:
+            sleep(2.2)
+            st.session_state.password_correct = False
+
+    if "password_correct" not in st.session_state:
+        # First run, show input for password.
+        st.text_input("Enter the code access", type="password", on_change=password_entered, key="password")
+        return False
+
+    elif not st.session_state.password_correct:
+        # Password not correct, show input + error.
+        st.text_input("Enter the code access", type="password", on_change=password_entered, key="password")
+        st.error("😕 Password incorrect")
+        return False
+    else:
+        # Password correct.
+        return True
+
+def get_single_image(link):
+    
+    auth = HTTPBasicAuth(st.secrets.sage.username, st.secrets.sage.password)
+    response = requests.get(link, auth=auth, stream=True)
+    
+    if response.status_code == 200:
+        with open(f'images/img_{link.split("/")[-1]}', 'wb') as f:
+            shutil.copyfileobj(response.raw, f)
+
 
 @st.cache_data
 def get_data(
@@ -33,7 +74,6 @@ def get_data(
         }
     )
 
-    print(f"env.{parameter}")
     return df
 
 @st.cache_data
@@ -210,5 +250,37 @@ def to_isodate(d:date, t:datetime) -> str:
         d.year, d.month, d.day,
         t.hour, t.minute, t.second) 
 
-if __name__ == "main":
+@st.cache_data
+def get_images(
+    parameter:str,
+    node_id:str,
+    start_datetime:str, end_datetime:str,
+    **kwargs):
+
+    """
+    Queries the SAGE API for camera photos
+    """
+    PATH_TO_IMAGES_FOLDER = 'images'
+
+    if os.path.exists(PATH_TO_IMAGES_FOLDER):
+        shutil.rmtree(PATH_TO_IMAGES_FOLDER)
+
+    os.mkdir(PATH_TO_IMAGES_FOLDER)
+
+    df = sage_data_client.query(
+        start=start_datetime,
+        end=end_datetime,
+        filter={
+            "vsn": node_id,
+            "task": f"imagesampler-{parameter}"}
+    )
+
+    df.sort_values("timestamp", inplace=True)
+    links = df.value
+
+    # To run using multiprocessing
+    with Pool() as pool:
+        pool.map(get_single_image, links)
+
+if __name__ == "__main__":
     pass
