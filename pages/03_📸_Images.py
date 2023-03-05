@@ -5,6 +5,7 @@ import streamlit as st
 from datetime import date, time
 from appmisc import *
 
+## Not implemented yet
 st.session_state.form_submitted = False
 def make_persistent(): st.session_state.form_submitted = True
 
@@ -58,9 +59,9 @@ if check_password():
                 use_container_width=True,
                 type="primary",
                 on_click=make_persistent)
-    import base64
+
     with container:
-        if submit_button or st.session_state.form_submitted:
+        if submit_button:
             imgs, df = get_images(
                 parameter,
                 node_id,
