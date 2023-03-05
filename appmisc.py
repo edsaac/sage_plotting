@@ -1,15 +1,21 @@
+import streamlit as st
 import pandas as pd
+import sage_data_client
+
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import sage_data_client
-import streamlit as st
+from PIL import Image
+
 from datetime import datetime, date, time
 import shutil, os
-import requests
-from requests.auth import HTTPBasicAuth
 from multiprocessing import Pool
 from time import sleep
+
+import requests
+from requests.auth import HTTPBasicAuth
+from tempfile import NamedTemporaryFile
+
 
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -43,8 +49,13 @@ def get_single_image(link):
     response = requests.get(link, auth=auth, stream=True)
     
     if response.status_code == 200:
-        with open(f'images/img_{link.split("/")[-1]}', 'wb') as f:
+        with NamedTemporaryFile('wb') as f:
             shutil.copyfileobj(response.raw, f)
+            img = Image.open(f.name)
+    #     with open(f'images/img_{link.split("/")[-1]}', 'wb') as f:
+    #         shutil.copyfileobj(response.raw, f)
+    
+    return img
 
 
 @st.cache_data
@@ -255,7 +266,7 @@ def get_images(
     parameter:str,
     node_id:str,
     start_datetime:str, end_datetime:str,
-    **kwargs):
+    **kwargs) -> list:
 
     """
     Queries the SAGE API for camera photos
@@ -278,9 +289,10 @@ def get_images(
     df.sort_values("timestamp", inplace=True)
     links = df.value
 
-    # To run using multiprocessing
-    with Pool() as pool:
-        pool.map(get_single_image, links)
+    # Request images using multiprocessing
+    with Pool() as pool: imgs = pool.map(get_single_image, links)
+    
+    return imgs, df
 
 if __name__ == "__main__":
     pass

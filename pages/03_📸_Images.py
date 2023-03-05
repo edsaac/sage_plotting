@@ -59,16 +59,20 @@ if check_password():
                 use_container_width=True,
                 type="primary",
                 on_click=make_persistent)
-
+    import base64
     with container:
         if submit_button or st.session_state.form_submitted:
-            get_images(
+            imgs, df = get_images(
                 parameter,
                 node_id,
                 iso_start_time.isoformat(),
                 iso_end_time.isoformat()
             )
-
-            for f in os.listdir('images'):
-                st.image(f'images/{f}')
+            
+            print([type(img) for img in imgs])
+            for t,f in zip(df.timestamp, imgs):
+                st.write(f"**{t}**")
+                st.image(f)
+            # for f in os.listdir('images'):
+            #     st.image(f'images/{f}')
 
