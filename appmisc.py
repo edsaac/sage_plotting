@@ -16,7 +16,6 @@ import requests
 from requests.auth import HTTPBasicAuth
 from tempfile import NamedTemporaryFile
 
-
 def check_password():
     """Returns `True` if the user had the correct password."""
 

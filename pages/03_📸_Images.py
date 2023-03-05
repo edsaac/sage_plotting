@@ -6,6 +6,7 @@ from datetime import date, time
 from appmisc import *
 
 st.session_state.form_submitted = False
+def make_persistent(): st.session_state.form_submitted = True
 
 with open("./assets/style.css") as f:
     st.markdown(f"""
@@ -19,8 +20,6 @@ parameters = {
 
 "# 📸 Images from the SAGE node"
 container = st.container()
-def make_persistent():
-    st.session_state.form_submitted = True
 
 if check_password():
     with st.sidebar:

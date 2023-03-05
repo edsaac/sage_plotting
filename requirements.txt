@@ -1,5 +1,6 @@
 numpy
 pandas
+requests
 matplotlib
 plotly
 sage_data_client
