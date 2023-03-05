@@ -41,7 +41,7 @@ if check_password():
             
             date_range = st.date_input(
                 "Dates range",
-                [date(2023, 3, 1), date(2023, 3, 1)],
+                [date(2023, 3, 4), date(2023, 3, 4)],
                 label_visibility="collapsed")
             
             start_date, end_date = date_range
@@ -69,7 +69,9 @@ if check_password():
                 iso_end_time.isoformat()
             )
             
+            print(parameter, node_id)
             print([type(img) for img in imgs])
+
             for t,f in zip(df.timestamp, imgs):
                 st.write(f"**{t}**")
                 st.image(f)

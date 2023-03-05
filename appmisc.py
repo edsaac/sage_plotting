@@ -42,21 +42,6 @@ def check_password():
         # Password correct.
         return True
 
-def get_single_image(link):
-    
-    auth = HTTPBasicAuth(st.secrets.sage.username, st.secrets.sage.password)
-    response = requests.get(link, auth=auth, stream=True)
-    
-    if response.status_code == 200:
-        with NamedTemporaryFile('wb') as f:
-            shutil.copyfileobj(response.raw, f)
-            img = Image.open(f.name)
-    #     with open(f'images/img_{link.split("/")[-1]}', 'wb') as f:
-    #         shutil.copyfileobj(response.raw, f)
-    
-    return img
-
-
 @st.cache_data
 def get_data(
     parameter:str,
@@ -261,6 +246,21 @@ def to_isodate(d:date, t:datetime) -> str:
         t.hour, t.minute, t.second) 
 
 @st.cache_data
+def get_single_image(link):
+    
+    auth = HTTPBasicAuth(st.secrets.sage.username, st.secrets.sage.password)
+    response = requests.get(link, auth=auth, stream=True)
+    
+    if response.status_code == 200:
+        with NamedTemporaryFile('wb') as f:
+            shutil.copyfileobj(response.raw, f)
+            img = Image.open(f.name)
+    #     with open(f'images/img_{link.split("/")[-1]}', 'wb') as f:
+    #         shutil.copyfileobj(response.raw, f)
+    
+    return img
+
+@st.cache_data
 def get_images(
     parameter:str,
     node_id:str,
@@ -270,26 +270,22 @@ def get_images(
     """
     Queries the SAGE API for camera photos
     """
-    PATH_TO_IMAGES_FOLDER = 'images'
-
-    if os.path.exists(PATH_TO_IMAGES_FOLDER):
-        shutil.rmtree(PATH_TO_IMAGES_FOLDER)
-
-    os.mkdir(PATH_TO_IMAGES_FOLDER)
 
     df = sage_data_client.query(
         start=start_datetime,
         end=end_datetime,
         filter={
-            "vsn": node_id,
-            "task": f"imagesampler-{parameter}"}
+            "task": "imagesampler-" + parameter,
+            "vsn": node_id
+        }
     )
 
     df.sort_values("timestamp", inplace=True)
     links = df.value
 
     # Request images using multiprocessing
-    with Pool() as pool: imgs = pool.map(get_single_image, links)
+    with Pool() as pool: 
+        imgs = pool.map(get_single_image, links)
     
     return imgs, df
 
