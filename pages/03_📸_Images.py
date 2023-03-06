@@ -35,7 +35,7 @@ if check_password():
                 label_visibility="collapsed")
             
             "## 📍 Node:"
-            node_id = st.selectbox("Node", ["W083", "W024"], label_visibility="collapsed")
+            node_id = st.selectbox("Node", ["W083", "W024", "W014"], label_visibility="collapsed")
 
             "## 🗓️ Time range:"
             
