@@ -41,10 +41,11 @@ if check_password():
             
             date_range = st.date_input(
                 "Dates range",
-                [date(2023, 3, 4), date(2023, 3, 4)],
+                date(2023, 3, 4),
                 label_visibility="collapsed")
             
-            start_date, end_date = date_range
+            start_date = date_range
+            end_date = date_range
             
             cols = st.columns(2)
             with cols[0]: start_time = st.time_input("Start time", time(4,0,0))
