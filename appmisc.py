@@ -15,13 +15,14 @@ from time import sleep
 import requests
 from requests.auth import HTTPBasicAuth
 from tempfile import NamedTemporaryFile
+import hashlib
 
 def check_password():
     """Returns `True` if the user had the correct password."""
 
     def password_entered():
         """Checks whether a password entered by the user is correct."""
-        if st.session_state.password == st.secrets.cover.secret:
+        if hashlib.sha256(bytes(st.session_state.password,'utf-8')).hexdigest() == st.secrets.cover.secret:
             st.session_state.password_correct = True
             del st.session_state.password
         else:
