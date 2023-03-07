@@ -16,6 +16,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from tempfile import NamedTemporaryFile
 import hashlib
+from collections import namedtuple
 
 def check_password():
     """Returns `True` if the user had the correct password."""
@@ -292,6 +293,36 @@ def get_images(
         imgs = list()
 
     return imgs, df
+
+####################################
+## Mapping
+####################################
+
+Coord = namedtuple('Coord', ['lat', 'lon'])
+
+@st.cache_data
+def get_coordinates(node_id):
+
+    lat = sage_data_client.query(
+        start="-1.5h",
+        filter={
+            "name": "sys.gps.lat",
+            "vsn": node_id
+        }
+    )
+
+    lon = sage_data_client.query(
+        start="-0.5h",
+        filter={
+            "name": "sys.gps.lon",
+            "vsn": node_id
+        }
+    )
+
+    lat = lat['value'].mean()
+    lon = lon['value'].mean()
+
+    return Coord(lat, lon)
 
 if __name__ == "__main__":
     pass

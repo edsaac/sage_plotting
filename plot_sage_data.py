@@ -14,4 +14,4 @@ with open("./assets/style.css") as f:
 "# 👋 Hello"
 cols = st.columns([1,1])
 with cols[0]: st.info(" 👈 Select one of the options from the sidebar")
-with cols[1]: st.image("https://portal.sagecontinuum.org/wsn-closed.dfca4c4b.png")
+with cols[1]: st.image("https://portal.sagecontinuum.org/wsn-closed.dfca4c4b.png", width=100)
