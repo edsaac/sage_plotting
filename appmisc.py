@@ -284,10 +284,13 @@ def get_images(
     df.sort_values("timestamp", inplace=True)
     links = df.value
 
-    # Request images using multiprocessing
-    with Pool() as pool: 
-        imgs = pool.map(get_single_image, links)
-    
+    # Request images using multiprocessing if links are encountered
+    if len(links) > 0:
+        with Pool() as pool: 
+            imgs = pool.map(get_single_image, links)
+    else: 
+        imgs = list()
+
     return imgs, df
 
 if __name__ == "__main__":

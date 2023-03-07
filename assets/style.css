@@ -13,3 +13,13 @@
     opacity: 1.0;
     transform: rotate(180deg);
 }
+
+[data-testid=stCaptionContainer]{
+    text-align: center;
+    margin-bottom: -1.8rem;
+}
+
+[data-testid="stSidebar"] ul li:first-child{
+    font-size: 1.2rem;
+    font-style: italic;
+}

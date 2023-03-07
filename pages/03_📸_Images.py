@@ -1,8 +1,6 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import sage_data_client
 import streamlit as st
 from datetime import date, time
+from itertools import cycle
 from appmisc import *
 
 ## Not implemented yet
@@ -69,13 +67,19 @@ if check_password():
                 iso_start_time.isoformat(),
                 iso_end_time.isoformat()
             )
-            
-            print(parameter, node_id)
-            print([type(img) for img in imgs])
 
-            for t,f in zip(df.timestamp, imgs):
-                st.write(f"**{t}**")
-                st.image(f)
+            if len(imgs) == 0:
+                st.warning("No images were found", icon="🌌")
+            
+            else:
+                cols = st.columns(3)
+                cycle_cols = cycle(cols)
+
+                for t,f,col in zip(df.timestamp, imgs, cycle_cols):
+                    with col:
+                        st.caption(f"*{t.strftime('%A, %d %B %Y %I:%M%p')}*")
+                        st.image(f, use_column_width=True)
+
             # for f in os.listdir('images'):
             #     st.image(f'images/{f}')
 
