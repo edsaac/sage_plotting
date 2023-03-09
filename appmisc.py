@@ -286,10 +286,10 @@ def get_images(
     links = df.value
 
     # Request images using multiprocessing if links are encountered
-    if len(links) > 0:
+    if 0 < len(links) < 16:
         with Pool() as pool: 
             imgs = pool.map(get_single_image, links)
-    else: 
+    else:
         imgs = list()
 
     return imgs, df
