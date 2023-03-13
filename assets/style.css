@@ -1,15 +1,44 @@
+[data-testid=stImage] {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 [data-testid=stSidebar] [data-testid=stImage] {
     text-align: center;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 30%;
+    width: 20%;
     transition: all 0.8s;
     opacity: 0.7;
-    transform: rotate(360deg);
+
+    animation: 2s infinite normal;
+    animation-name: spinny;
+    animation-timing-function: linear;
+}
+
+@keyframes spinny {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 [data-testid=stSidebar] [data-testid=stImage]:hover {
     opacity: 1.0;
-    transform: rotate(180deg);
+    animation-play-state: paused;
+}
+
+[data-testid=stCaptionContainer]{
+    text-align: center;
+    margin-bottom: -1.8rem;
+}
+
+[data-testid="stSidebar"] ul li:first-child{
+    font-size: 1.2rem;
+    font-style: italic;
 }
