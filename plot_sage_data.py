@@ -15,3 +15,9 @@ with open("./assets/style.css") as f:
 cols = st.columns([1,1])
 with cols[0]: st.info(" 👈 Select one of the options from the sidebar")
 with cols[1]: st.image("https://portal.sagecontinuum.org/wsn-closed.dfca4c4b.png")
+
+with st.expander("**Useful links**", expanded=True):
+    """
+    - [🔗](https://docs.waggle-edge.ai/docs/about/overview) Waggle: A distributed software-defined sensor network.
+    - [🔗](https://portal.sagecontinuum.org/nodes) Sage Portal.
+    """
