@@ -23,7 +23,7 @@ with st.sidebar:
     tiles = st.selectbox(
         "🌌 Pick a map style:", 
         sorted(MAP_ATTRIBUTIONS.keys()),
-        index=7)
+        index=4)
 
 coords = [ get_coordinates(node) for node in nodes ]
 mid_coord = Coord(mean([c.lat for c in coords]), mean([c.lon for c in coords]))
