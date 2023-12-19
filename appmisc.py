@@ -297,6 +297,22 @@ def get_images(
 ####################################
 ## Mapping
 ####################################
+MAP_ATTRIBUTIONS = {
+    "USGS USTopo": """Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>""",
+    "USGS USImageryTopo": """Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>""",
+    "OpenStreetMap Mapnik": """<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>""",
+    "OpenStreetMap HOT": """<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>""",
+    "OpenTopoMap": """<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>""",
+    "Stadia Outdoors": """<a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>""",
+    "Stadia StamenTerrain": """<a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>""",
+    "Stadia StamenToner": """<a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>""",
+    "Stadia StamenTonerLite": """<a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>""",
+    "Stadia StamenWatercolor": """<a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>""",
+    "CartoDB Positron": """<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>""", 
+    "CartoDB Dark_Matter": """<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>""",
+    "CartoDB Voyager": """<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>""",
+    "CyclOSM":"""<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a>"""
+}
 
 Coord = namedtuple('Coord', ['lat', 'lon'])
 
