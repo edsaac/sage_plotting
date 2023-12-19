@@ -44,5 +44,5 @@
 }
 
 [data-testid='stSidebarNav'] > ul {
-    min-height: 65vh;
+    min-height: 35vh;
 }
